@@ -25,6 +25,7 @@ import kr.co.loafingcat.configuration.http.BaseResponse;
 import kr.co.loafingcat.configuration.http.BaseResponseCode;
 import kr.co.loafingcat.framework.data.domain.MySQLPageRequest;
 import kr.co.loafingcat.framework.data.domain.PageRequestParameter;
+import kr.co.loafingcat.framework.web.bind.annotation.RequestConfig;
 import kr.co.loafingcat.mvc.domain.Board;
 import kr.co.loafingcat.mvc.parameter.BoardParameter;
 import kr.co.loafingcat.mvc.parameter.BoardSearchParameter;
@@ -84,8 +85,9 @@ public class BoardController {
 	 * 
 	 * @param board
 	 */
-	@SuppressWarnings("deprecation")
-	@PutMapping("/save")
+	
+	@PutMapping
+	@RequestConfig
 	// @PutMapping
 	// @PostMapping 개발하는 추세로 보면 이 둘을 쓰는게 맞지만 아직 테스트할 환경이 되지 않으니
 	// GetMapping으로 함. 실무에서는 데이터를 저장하거나 삭제할 때 Get은 웬만하면 쓰지 않는게 좋음
@@ -94,6 +96,7 @@ public class BoardController {
 			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌"), })
 	public BaseResponse<Integer> save(BoardParameter parameter) {
+		
 		// 제목 필수 체크
 		if (ObjectUtils.isEmpty(parameter.getTitle())) {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "title", "제목" });
@@ -104,6 +107,7 @@ public class BoardController {
 		}
 		boardService.save(parameter);
 		return new BaseResponse<Integer>(parameter.getBoardSeq());
+		
 	}
 
 	/**
