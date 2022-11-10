@@ -59,6 +59,11 @@ public class WebConfiguration implements WebMvcConfigurer {
 		jsonView.setObjectMapper(objectMapper());
 		return jsonView;
 	}
+	
+	@Bean
+	public GlobalConfig config() {
+		return new GlobalConfig();
+	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
