@@ -13,19 +13,23 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-
 public class GlobalConfig {
-	
+
 	final Logger logger = LoggerFactory.getLogger(getClass());
-	
-	@Autowired 
+
+	@Autowired
 	private ApplicationContext context;
-	
+
 	@Autowired
 	private ResourceLoader resourceLoader;
-	
+
 	private String uploadFilePath;
-	
+	private String schedulerCronExample1;
+
+	private boolean local;
+	private boolean dev;
+	private boolean prod;
+
 	@PostConstruct
 	public void inint() {
 		logger.info("init");
@@ -38,13 +42,34 @@ public class GlobalConfig {
 		try {
 			Resource resource = resourceLoader.getResource(resourePath);
 			Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-			uploadFilePath = properties.getProperty("uploadFile.path");
+			this.uploadFilePath = properties.getProperty("uploadFile.path");
+			this.schedulerCronExample1 = properties.getProperty("scheduler.cron.example1");
+			this.local = activeProfile.equals("local");
+			this.dev = activeProfile.equals("dev");
+			this.prod = activeProfile.equals("prod");
 		} catch (Exception e) {
 			logger.error("e", e);
 		}
 	}
+
 	public String getUploadFilePath() {
 		return uploadFilePath;
+	}
+	
+	public String getSchedulerCronExample1() {
+		return schedulerCronExample1;
+	}
+
+	public boolean isLocal() {
+		return local;
+	}
+
+	public boolean isDev() {
+		return dev;
+	}
+
+	public boolean isProd() {
+		return prod;
 	}
 
 }
