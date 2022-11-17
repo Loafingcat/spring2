@@ -26,7 +26,7 @@ public class BaseHandlerInterceptor implements HandlerInterceptor {
 			RequestConfig requestConfig = handlerMethod.getMethodAnnotation(RequestConfig.class);
 			if (requestConfig != null) {
 				//로그인 체크가 필수인 경우
-				if (!requestConfig.loginCheck()) {
+				if (requestConfig.loginCheck()) {
 					throw new BaseException(BaseResponseCode.LOGIN_REQUIRED, new String[] { request.getRequestURI() });
 				}
 			}

@@ -87,7 +87,7 @@ public class BoardController {
 	 */
 	
 	@PutMapping
-	@RequestConfig
+	@RequestConfig(loginCheck = false)
 	// @PutMapping
 	// @PostMapping 개발하는 추세로 보면 이 둘을 쓰는게 맞지만 아직 테스트할 환경이 되지 않으니
 	// GetMapping으로 함. 실무에서는 데이터를 저장하거나 삭제할 때 Get은 웬만하면 쓰지 않는게 좋음

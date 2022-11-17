@@ -3,13 +3,18 @@
 
 <mapper namespace="kr.co.loafingcat.mvc.repository.BoardRepository">
 
-	<select id="getList" parameterType="kr.co.loafingcat.framework.data.domain.PageRequestParameter" resultType="kr.co.loafingcat.mvc.domain.Board">
+	<resultMap type="kr.co.loafingcat.mvc.domain.Board" id="getListResultMap">
+	<result column="DEL_YN" property="delYn" typeHandler="kr.co.loafingcat.configuration.mybatis.typehandler.StringValueBooleanTypeHandler"/>
+	</resultMap>
+
+	<select id="getList" parameterType="kr.co.loafingcat.framework.data.domain.PageRequestParameter" resultMap="getListResultMap">
 		SELECT
 			B.BOARD_SEQ,
 			B.BOARD_TYPE,
 			B.TITLE,
 			B.CONTENTS,
-			B.REG_DATE
+			B.REG_DATE,
+			B.DEL_YN
 		FROM T_BOARD B
 		<where>
 			<!-- 키워드 검색 -->
@@ -46,14 +51,18 @@
 			BOARD_TYPE,
 			TITLE,
 			CONTENTS,
-			REG_DATE
+			REG_DATE,
+			DEL_YN
+			
 		)
 		VALUES
 		(
 			#{boardType.code},
 			#{title},
 			#{contents},
-			NOW()
+			NOW(),
+			#{delYn, typeHandler=kr.co.loafingcat.configuration.mybatis.typehandler.StringValueBooleanTypeHandler}
+			
 		)
 	</insert>	
 	
