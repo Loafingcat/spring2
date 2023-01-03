@@ -7,12 +7,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -36,14 +40,14 @@ import kr.co.loafingcat.mvc.service.BoardService;
  * @author loafingcat
  * */
 
-@RestController
+@Controller
 @RequestMapping("/board")
-@Api(tags = "게시판 API")
+@Api(tags = "게시판 API")//클래스를 Swagger 리소스 대상으로 표시
 public class BoardController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
+	@Autowired//보드컨트롤러에서 보드서비스로 연결
 	private BoardService boardService;
 
 	/*
@@ -51,46 +55,61 @@ public class BoardController {
 	 * 
 	 * @return
 	 */
-	@GetMapping
-	@ApiOperation(value = "목록 조회", notes = "게시물 목록 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList(
-			@ApiParam BoardSearchParameter parameter,
-			@ApiParam MySQLPageRequest pageRequest) {
+	@GetMapping("/list")
+	public void list(BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
 		logger.info("pageRequest : {}", pageRequest);
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
-		return new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
+		List<Board> boardList = boardService.getList(pageRequestParameter);
+		model.addAttribute("boardList", boardList);
 	}
 
 	/*
-	 * 상세 정보 리턴
+	 * 상세 정보 리턴 
 	 * 
 	 * @param boarSeq
 	 * 
 	 * @return
 	 */
 	@GetMapping("/{boardSeq}")
-	@ApiOperation(value = "상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1") })
-	public BaseResponse<Board> get(@PathVariable int boardSeq) {
+	public String detail(@PathVariable int boardSeq) {
 		Board board = boardService.get(boardSeq);
 		// null 처리
 		if (board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
-		return new BaseResponse<Board>(board);
+		return "/board/detail";
 	}
 
+	/**
+	 * 등록/수정 화면
+	 * 
+	 * */
+	@GetMapping("/form")
+	@RequestConfig(loginCheck = false)
+	public void form(BoardParameter parameter, Model model) {
+		if (parameter.getBoardSeq() > 0) {
+			Board board = boardService.get(parameter.getBoardSeq());
+			model.addAttribute("board", board);
+		}
+		model.addAttribute("parameter", parameter);
+	}
+	
+	
+	
+	
+	
 	/*
 	 * 등록 처리
 	 * 
 	 * @param board
 	 */
 	
-	@PutMapping
-	@RequestConfig(loginCheck = false)
+	@PostMapping("/save")
+	@RequestConfig(loginCheck = false)//만든 어노테이션인 RequestConfig 로그인체크 true/false 여기서 조절
 	// @PutMapping
 	// @PostMapping 개발하는 추세로 보면 이 둘을 쓰는게 맞지만 아직 테스트할 환경이 되지 않으니
 	// GetMapping으로 함. 실무에서는 데이터를 저장하거나 삭제할 때 Get은 웬만하면 쓰지 않는게 좋음
+	@ResponseBody
 	@ApiOperation(value = "등록/ 수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
 			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
@@ -165,7 +184,8 @@ public class BoardController {
 	 * 
 	 * @param boardSeq
 	 */
-	@DeleteMapping("/{boardSeq}")
+	@DeleteMapping("/{boardSeq}")//DeleteMapping 어노테이션이 붙어있기 때문에 HTTP Request를 Delete 방식으로 보냈을 때에만 RestController에서 해당 Request를 받는다.
+	@ResponseBody
 	@ApiOperation(value = "삭제 처리", notes = "게시물 번호에 해당하는 정보를 삭제합니다.")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"), })
 	public BaseResponse<Boolean> delete(@PathVariable int boardSeq) {

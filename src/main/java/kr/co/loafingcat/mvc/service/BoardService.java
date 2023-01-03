@@ -18,10 +18,10 @@ import kr.co.loafingcat.mvc.repository.BoardRepository;
  * @author loafingCat
  * */
 
-@Service
+@Service//스프링 컨테이너에 스프링 빈으로 등록
 public class BoardService {
 	
-	@Autowired
+	@Autowired//보드서비스에서 보드리포지토리로 연결
 	private BoardRepository repository;
 
 	

@@ -14,7 +14,7 @@ import kr.co.loafingcat.mvc.parameter.BoardSearchParameter;
  * 게시판 Repository
  * @author loafingCat
  * */
-@Repository
+@Repository//보드리포지토리도 스프링 빈에 등록한 것이다.
 public interface BoardRepository {
 
 	List<Board> getList(PageRequestParameter<BoardSearchParameter> pageRequestParameter);

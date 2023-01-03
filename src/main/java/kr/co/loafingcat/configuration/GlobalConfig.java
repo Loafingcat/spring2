@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 public class GlobalConfig {
 
@@ -25,6 +26,7 @@ public class GlobalConfig {
 
 	private String uploadFilePath;
 	private String schedulerCronExample1;
+	private String uploadResourcePath;
 
 	private boolean local;
 	private boolean dev;
@@ -44,6 +46,7 @@ public class GlobalConfig {
 			Properties properties = PropertiesLoaderUtils.loadProperties(resource);
 			this.uploadFilePath = properties.getProperty("uploadFile.path");
 			this.schedulerCronExample1 = properties.getProperty("scheduler.cron.example1");
+			this.uploadResourcePath = properties.getProperty("uploadFile.resourcePath");
 			this.local = activeProfile.equals("local");
 			this.dev = activeProfile.equals("dev");
 			this.prod = activeProfile.equals("prod");
@@ -54,6 +57,10 @@ public class GlobalConfig {
 
 	public String getUploadFilePath() {
 		return uploadFilePath;
+	}
+	
+	public String getUploadResourcePath() {
+		return uploadResourcePath;
 	}
 	
 	public String getSchedulerCronExample1() {
@@ -71,5 +78,6 @@ public class GlobalConfig {
 	public boolean isProd() {
 		return prod;
 	}
+	
 
 }
