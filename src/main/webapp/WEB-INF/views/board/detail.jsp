@@ -18,55 +18,21 @@
 <body>
 	<div class="container">
 		<div class="card">
-			<div class="card-header">
-			${board.title}
-			</div>
+			<div class="card-header">${board.title}</div>
 			<div class="card-body">
 				<blockquote class="blockquote mb-0">
 					<p>${board.contents}</p>
-					<footer class="blockquote-footer"><fmt:formatDate value="${board.regDate}"pattern="yyyy.MM.dd HH:mm" /></footer>
+					<footer class="blockquote-footer">
+						<fmt:formatDate value="${board.regDate}"
+							pattern="yyyy.MM.dd HH:mm" />
+					</footer>
 				</blockquote>
 			</div>
 		</div>
-		<form id="form" method="get" action="/list">
-			<div class="row mb-3">
-				<label for="title" class="col-sm-2 col-form-label"><spring:message
-						code="search.keyword" /></label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" name="keyword"
-						value=" ${parameter.keyword}" id="keyword"
-						placeholder="<spring:message code="placeholder.required" />">
-				</div>
-			</div>
-			<button type="submit" class="btn btn-primary">
-				<spring:message code="button.search" />
-			</button>
-			<table class="table caption-top">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col"><spring:message code="board.title" /></th>
-						<th scope="col"><spring:message code="board.viewCount" /></th>
-						<th scope="col"><spring:message code="board.regDate" /></th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="board" items="${boardList}">
-						<tr>
-							<th scope="row">${status.count}</th>
-							<td><a href="/board/${board.boardSeq}">${board.title}</a></td>
-							<td>${board.viewCount}</td>
-							<td><fmt:formatDate value="${board.regDate}"pattern="yyyy.MM.dd HH:mm" /></td>
-						</tr>
-					</c:forEach>
-					<c:if test="${fn:length(boardList) == 0}">
-						<tr>
-							<td colspan="4"><spring:message code="msg.board.empty" /></td>
-						</tr>
-					</c:if>
-				</tbody>
-			</table>
-		</form>
+		<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
+			<a href="board/list" class="btn btn-primary me-md-2" type="button"><spring:message code="button.list"/></a>
+			<a href="/board/edit/${board.boardSeq}" class="btn btn-primary" type="button"><spring:message code="button.edit"/></a>
+		</div>
 	</div>
 	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script>

@@ -2,7 +2,7 @@ package kr.co.loafingcat.mvc.parameter;
 
 import java.util.List;
 
-import kr.co.loafingcat.mvc.domain.BoardType;
+import kr.co.loafingcat.mvc.domain.MenuType;
 import lombok.Data;
 
 /**
@@ -14,7 +14,7 @@ import lombok.Data;
 public class BoardSearchParameter {
 
 	private String keyword;
-	private List<BoardType> boardTypes;
+	private List<MenuType> boardTypes;
 
 	public BoardSearchParameter() {
 

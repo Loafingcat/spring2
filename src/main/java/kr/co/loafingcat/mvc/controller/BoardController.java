@@ -31,6 +31,7 @@ import kr.co.loafingcat.framework.data.domain.MySQLPageRequest;
 import kr.co.loafingcat.framework.data.domain.PageRequestParameter;
 import kr.co.loafingcat.framework.web.bind.annotation.RequestConfig;
 import kr.co.loafingcat.mvc.domain.Board;
+import kr.co.loafingcat.mvc.domain.MenuType;
 import kr.co.loafingcat.mvc.parameter.BoardParameter;
 import kr.co.loafingcat.mvc.parameter.BoardSearchParameter;
 import kr.co.loafingcat.mvc.service.BoardService;
@@ -55,12 +56,14 @@ public class BoardController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/list")
-	public void list(BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
+	@GetMapping("/{menuType}")
+	public String list(@PathVariable MenuType menuType, BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
+		logger.info("menuType : {}", menuType);
 		logger.info("pageRequest : {}", pageRequest);
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
 		List<Board> boardList = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", boardList);
+		return "/board/list";
 	}
 
 	/*
@@ -70,31 +73,43 @@ public class BoardController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/{boardSeq}")
-	public String detail(@PathVariable int boardSeq) {
+	@GetMapping("/detail/{boardSeq}")
+	public String detail(@PathVariable int boardSeq, Model model) {
 		Board board = boardService.get(boardSeq);
 		// null 처리
 		if (board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
+		model.addAttribute("board", board);
 		return "/board/detail";
 	}
 
 	/**
-	 * 등록/수정 화면
+	 * 등록화면
 	 * 
 	 * */
 	@GetMapping("/form")
 	@RequestConfig(loginCheck = false)
 	public void form(BoardParameter parameter, Model model) {
-		if (parameter.getBoardSeq() > 0) {
-			Board board = boardService.get(parameter.getBoardSeq());
-			model.addAttribute("board", board);
-		}
 		model.addAttribute("parameter", parameter);
 	}
 	
-	
+	/**
+	 * 수정 화면
+	 * 
+	 * */
+	@GetMapping("/edit/{boardSeq}")
+	@RequestConfig(loginCheck = false)
+	public String edit(@PathVariable(required = true) int boardSeq, BoardParameter parameter, Model model) {
+		Board board = boardService.get(parameter.getBoardSeq());
+		// null 처리
+		if (board == null) {
+			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
+		}
+		model.addAttribute("board", board);
+		model.addAttribute("parameter", parameter);
+		return "/board/form";
+	}
 	
 	
 	
