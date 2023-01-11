@@ -8,7 +8,7 @@ import lombok.Data;
 public class Board {
 	
 	private int boardSeq;
-	private MenuType boardType;
+	private BoardType boardType;
 	private String title;
 	private String contents;
 	private int viewCount;

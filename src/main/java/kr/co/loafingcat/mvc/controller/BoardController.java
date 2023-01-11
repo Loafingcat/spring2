@@ -42,8 +42,6 @@ import kr.co.loafingcat.mvc.service.BoardService;
  * */
 
 @Controller
-@RequestMapping("/board")
-@Api(tags = "게시판 API")//클래스를 Swagger 리소스 대상으로 표시
 public class BoardController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
