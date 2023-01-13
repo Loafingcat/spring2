@@ -42,7 +42,7 @@
 					<c:forEach var="board" items="${boardList}">
 						<tr>
 							<th scope="row">${status.count}</th>
-							<td><a href="/board/${board.boardSeq}">${board.title}</a></td>
+							<td><a href="/${menuType}/${board.boardSeq}">${board.title}</a></td>
 							<td>${board.viewCount}</td>
 							<td><fmt:formatDate value="${board.regDate}"
 									pattern="yyyy.MM.dd HH:mm" /></td>
@@ -56,7 +56,7 @@
 				</tbody>
 			</table>
 			<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-				<a href="/board/form" class="btn btn-primary" type="button"><spring:message code="button.form" /></a>
+				<a href="/${menuType}/form" class="btn btn-primary" type="button"><spring:message code="button.form" /></a>
 			</div>
 		</form>
 	</div>

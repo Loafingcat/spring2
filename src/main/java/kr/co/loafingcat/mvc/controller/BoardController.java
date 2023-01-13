@@ -61,6 +61,7 @@ public class BoardController {
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
 		List<Board> boardList = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", boardList);
+		model.addAttribute("MenuType", menuType);
 		return "/board/list";
 	}
 
@@ -71,14 +72,15 @@ public class BoardController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/detail/{boardSeq}")
-	public String detail(@PathVariable int boardSeq, Model model) {
+	@GetMapping("/{menuType}/{boardSeq}")
+	public String detail(@PathVariable MenuType menuType, @PathVariable int boardSeq, Model model) {
 		Board board = boardService.get(boardSeq);
 		// null 처리
 		if (board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
 		model.addAttribute("board", board);
+		model.addAttribute("MenuType", menuType);
 		return "/board/detail";
 	}
 
@@ -86,19 +88,20 @@ public class BoardController {
 	 * 등록화면
 	 * 
 	 * */
-	@GetMapping("/form")
+	@GetMapping("{menuType}/form")
 	@RequestConfig(loginCheck = false)
-	public void form(BoardParameter parameter, Model model) {
+	public void form(@PathVariable MenuType menuType, BoardParameter parameter, Model model) {
 		model.addAttribute("parameter", parameter);
+		model.addAttribute("MenuType", menuType);
 	}
 	
 	/**
 	 * 수정 화면
 	 * 
 	 * */
-	@GetMapping("/edit/{boardSeq}")
+	@GetMapping("/{menuType}/edit/{boardSeq}")
 	@RequestConfig(loginCheck = false)
-	public String edit(@PathVariable(required = true) int boardSeq, BoardParameter parameter, Model model) {
+	public String edit(@PathVariable MenuType menuType, @PathVariable(required = true) int boardSeq, BoardParameter parameter, Model model) {
 		Board board = boardService.get(parameter.getBoardSeq());
 		// null 처리
 		if (board == null) {
@@ -106,6 +109,7 @@ public class BoardController {
 		}
 		model.addAttribute("board", board);
 		model.addAttribute("parameter", parameter);
+		model.addAttribute("MenuType", menuType);
 		return "/board/form";
 	}
 	
@@ -117,7 +121,7 @@ public class BoardController {
 	 * @param board
 	 */
 	
-	@PostMapping("/save")
+	@PostMapping("/{menuType}/save")
 	@RequestConfig(loginCheck = false)//만든 어노테이션인 RequestConfig 로그인체크 true/false 여기서 조절
 	// @PutMapping
 	// @PostMapping 개발하는 추세로 보면 이 둘을 쓰는게 맞지만 아직 테스트할 환경이 되지 않으니
@@ -127,7 +131,7 @@ public class BoardController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
 			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌"), })
-	public BaseResponse<Integer> save(BoardParameter parameter) {
+	public BaseResponse<Integer> save(@PathVariable MenuType menuType, BoardParameter parameter) {
 		
 		// 제목 필수 체크
 		if (ObjectUtils.isEmpty(parameter.getTitle())) {
