@@ -88,11 +88,12 @@ public class BoardController {
 	 * 등록화면
 	 * 
 	 * */
-	@GetMapping("{menuType}/form")
+	@GetMapping("/{menuType}/form")
 	@RequestConfig(loginCheck = false)
-	public void form(@PathVariable MenuType menuType, BoardParameter parameter, Model model) {
+	public String form(@PathVariable MenuType menuType, BoardParameter parameter, Model model) {
 		model.addAttribute("parameter", parameter);
 		model.addAttribute("MenuType", menuType);
+		return "/board/form";
 	}
 	
 	/**
@@ -131,7 +132,7 @@ public class BoardController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
 			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌"), })
-	public BaseResponse<Integer> save(@PathVariable MenuType menuType, BoardParameter parameter) {
+	public BaseResponse<Integer> save(@PathVariable MenuType menuType, BoardParameter parameter, Model model) {
 		
 		// 제목 필수 체크
 		if (ObjectUtils.isEmpty(parameter.getTitle())) {
@@ -142,6 +143,7 @@ public class BoardController {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "contents", "내용" });
 		}
 		boardService.save(parameter);
+		model.addAttribute("MenuType", menuType);
 		return new BaseResponse<Integer>(parameter.getBoardSeq());
 		
 	}

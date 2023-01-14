@@ -30,8 +30,8 @@
 			</div>
 		</div>
 		<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-			<a href="board/list" class="btn btn-primary me-md-2" type="button"><spring:message code="button.list"/></a>
-			<a href="/board/edit/${board.boardSeq}" class="btn btn-primary" type="button"><spring:message code="button.edit"/></a>
+			<a href="/${menuType}" class="btn btn-primary me-md-2" type="button"><spring:message code="button.list"/></a>
+			<a href="/${menuType}/edit/${board.boardSeq}" class="btn btn-primary" type="button"><spring:message code="button.edit"/></a>
 		</div>
 	</div>
 	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
