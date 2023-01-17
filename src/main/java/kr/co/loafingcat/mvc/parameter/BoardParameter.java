@@ -1,5 +1,6 @@
 package kr.co.loafingcat.mvc.parameter;
 
+import kr.co.loafingcat.mvc.domain.BoardType;
 import kr.co.loafingcat.mvc.domain.MenuType;
 import lombok.Data;
 
@@ -7,7 +8,7 @@ import lombok.Data;
 public class BoardParameter {
 
 	private int boardSeq;
-	private MenuType boardType;
+	private BoardType boardType;
 	private String title;
 	private String contents;
 	private boolean delYn;

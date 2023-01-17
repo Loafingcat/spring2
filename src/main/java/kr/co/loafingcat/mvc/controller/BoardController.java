@@ -61,7 +61,7 @@ public class BoardController {
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
 		List<Board> boardList = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", boardList);
-		model.addAttribute("MenuType", menuType);
+		model.addAttribute("menuType", menuType);
 		return "/board/list";
 	}
 
@@ -80,7 +80,7 @@ public class BoardController {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
 		model.addAttribute("board", board);
-		model.addAttribute("MenuType", menuType);
+		model.addAttribute("menuType", menuType);
 		return "/board/detail";
 	}
 
@@ -92,7 +92,7 @@ public class BoardController {
 	@RequestConfig(loginCheck = false)
 	public String form(@PathVariable MenuType menuType, BoardParameter parameter, Model model) {
 		model.addAttribute("parameter", parameter);
-		model.addAttribute("MenuType", menuType);
+		model.addAttribute("menuType", menuType);
 		return "/board/form";
 	}
 	
@@ -110,7 +110,7 @@ public class BoardController {
 		}
 		model.addAttribute("board", board);
 		model.addAttribute("parameter", parameter);
-		model.addAttribute("MenuType", menuType);
+		model.addAttribute("menuType", menuType);
 		return "/board/form";
 	}
 	
@@ -123,16 +123,13 @@ public class BoardController {
 	 */
 	
 	@PostMapping("/{menuType}/save")
-	@RequestConfig(loginCheck = false)//만든 어노테이션인 RequestConfig 로그인체크 true/false 여기서 조절
-	// @PutMapping
-	// @PostMapping 개발하는 추세로 보면 이 둘을 쓰는게 맞지만 아직 테스트할 환경이 되지 않으니
-	// GetMapping으로 함. 실무에서는 데이터를 저장하거나 삭제할 때 Get은 웬만하면 쓰지 않는게 좋음
+	@RequestConfig(loginCheck = false)
 	@ResponseBody
 	@ApiOperation(value = "등록/ 수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
 			@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 			@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌"), })
-	public BaseResponse<Integer> save(@PathVariable MenuType menuType, BoardParameter parameter, Model model) {
+	public BaseResponse<Integer> save(@PathVariable MenuType menuType, BoardParameter parameter) {
 		
 		// 제목 필수 체크
 		if (ObjectUtils.isEmpty(parameter.getTitle())) {
@@ -143,9 +140,7 @@ public class BoardController {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "contents", "내용" });
 		}
 		boardService.save(parameter);
-		model.addAttribute("MenuType", menuType);
 		return new BaseResponse<Integer>(parameter.getBoardSeq());
-		
 	}
 
 	/**

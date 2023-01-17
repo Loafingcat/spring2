@@ -5,13 +5,13 @@ public enum MenuType {
 	community(BoardType.COMMUNITY),
     notice(BoardType.NOTICE),
     faq(BoardType.FAQ),
-    inquiry(BoardType.INQUIRY)
+    inquiry(BoardType.INQUIRY),
     ;
 	
 	private BoardType boardType;
 	
 	private MenuType(BoardType boardType) {
-		this.boardType=boardType;
+		this.boardType = boardType;
 	}
 	
 	public BoardType boarType() {

@@ -16,7 +16,7 @@
 	crossorigin="anonymous">
 </head>
 <body>
-		<form id="form" method="get" action="/list">
+		<form id="form" method="get" action="board/list">
 			<div class="row mb-3">
 				<label for="title" class="col-sm-2 col-form-label"><spring:message
 						code="search.keyword" /></label>
