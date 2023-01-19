@@ -56,8 +56,9 @@ public class BoardController {
 	 */
 	@GetMapping("/{menuType}")
 	public String list(@PathVariable MenuType menuType, BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
-		logger.info("menuType : {}", menuType);
+		logger.info("menuType : {}", menuType); 
 		logger.info("pageRequest : {}", pageRequest);
+		parameter.setBoardType(menuType.boardType());
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
 		List<Board> boardList = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", boardList);
@@ -139,6 +140,7 @@ public class BoardController {
 		if (ObjectUtils.isEmpty(parameter.getContents())) {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "contents", "내용" });
 		}
+		parameter.setBoardType(menuType.boardType());
 		boardService.save(parameter);
 		return new BaseResponse<Integer>(parameter.getBoardSeq());
 	}

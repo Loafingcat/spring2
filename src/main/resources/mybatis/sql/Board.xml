@@ -15,11 +15,16 @@
 			B.CONTENTS,
 			B.REG_DATE,
 			B.DEL_YN
-		FROM T_BOARD B
+		FROM T_BOARD B	
+	
 		<where>
 			<!-- 키워드 검색 -->
 			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(parameter.keyword)">
 			AND B.TITLE LIKE CONCAT('%', #{parameter.keyword}, '%')
+			</if>
+			<!-- 게시물 종류 -->
+			<if test="@org.apache.commons.lang3.ObjectUtils@isNotEmpty(parameter.boardType)">
+			AND B.BOARD_TYPE = #{parameter.boardType}
 			</if>
 			<!-- 게시판 종류 배열 검색 -->
 			<if test="@org.apache.commons.lang3.ObjectUtils@isNotEmpty(parameter.boardTypes)">

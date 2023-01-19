@@ -13,7 +13,6 @@
 	<div class="container">
 		<form id="form" method="post" action="/save">
 			<input type="hidden" name="boardSeq" value="${board == null ? 0 : board.boardSeq}" />
-			<input type="hidden" name="boardType" value="COMMUNITY" />
 			<div class="row mb-3">
 				<label for="title" class="col-sm-2 col-form-label"><spring:message code="board.title" /></label>
 				<div class="col-sm-10">

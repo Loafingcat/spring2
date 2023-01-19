@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import kr.co.loafingcat.configuration.exception.BaseException;
 import kr.co.loafingcat.configuration.http.BaseResponseCode;
 import kr.co.loafingcat.framework.web.bind.annotation.RequestConfig;
+import kr.co.loafingcat.mvc.domain.MenuType;
 
 public class BaseHandlerInterceptor implements HandlerInterceptor {
 
@@ -37,6 +38,11 @@ public class BaseHandlerInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
+		if (handler instanceof HandlerMethod) {
+			if (modelAndView != null) {
+			modelAndView.addObject("menuTypes", MenuType.values());
+		}
 		logger.info("postHandle requestURI : {}", request.getRequestURI());
+		}
 	}
 }
